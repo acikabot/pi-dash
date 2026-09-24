@@ -1,0 +1,75 @@
+{% load static %}
+<div class="col-12 col-md-6 col-xl-4">
+  <div class="card h-100 service-card">
+    <div class="card-body d-flex flex-column">
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <span class="{{ status.dot }}"></span>
+        <h2 class="card-title mb-0 me-auto">{{ status.service.name }}</h2>
+        <span class="badge {{ status.badge }}">{{ status.label }}</span>
+      </div>
+      <p class="text-body-secondary service-meta mb-2">{{ status.service.blurb }}</p>
+
+      <ul class="list-unstyled service-meta text-body-secondary mb-3">
+        {% if status.uptime %}<li><i class="bi bi-clock"></i> Up {{ status.uptime }}{% if status.memory %} · {{ status.memory }}{% endif %}</li>{% endif %}
+        {% if status.next_run %}<li><i class="bi bi-calendar-event"></i> Next run in {{ status.next_run }}</li>{% endif %}
+        {% if status.last_activity %}<li><i class="bi bi-activity"></i> Last log {{ status.last_activity }}</li>{% endif %}
+        {% if status.healthy is not None %}
+        <li><i class="bi bi-heart-pulse"></i> Health check {% if status.healthy %}passing{% else %}failing{% endif %}</li>
+        {% endif %}
+      </ul>
+
+      <div class="d-flex flex-wrap gap-2 mt-auto">
+        <form method="post" action="{% url 'services:control' status.service.id %}" class="d-inline">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <input type="hidden" name="action" value="restart">
+          <button class="btn btn-sm btn-outline-secondary btn-touch" type="submit"
+                  data-busy data-busy-label="Restarting">
+            <i class="bi bi-arrow-clockwise"></i> Restart
+          </button>
+        </form>
+
+        {% if controls %}
+          {% if status.can_stop %}
+          <form method="post" action="{% url 'services:control' status.service.id %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <input type="hidden" name="action" value="stop">
+            <button class="btn btn-sm btn-outline-danger btn-touch" type="submit"
+                    data-busy data-busy-label="Stopping"><i class="bi bi-stop-fill"></i> Stop</button>
+          </form>
+          {% else %}
+          <form method="post" action="{% url 'services:control' status.service.id %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <input type="hidden" name="action" value="start">
+            <button class="btn btn-sm btn-outline-success btn-touch" type="submit"
+                    data-busy data-busy-label="Starting"><i class="bi bi-play-fill"></i> Start</button>
+          </form>
+          {% endif %}
+
+          {% for run in status.service.runs %}
+          <form method="post" action="{% url 'services:run' status.service.id %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <input type="hidden" name="mode" value="{{ run.mode }}">
+            <button class="btn btn-sm btn-outline-primary btn-touch" type="submit"
+                    data-busy data-busy-label="Starting"><i class="bi bi-play"></i> {{ run.label }}</button>
+          </form>
+          {% endfor %}
+        {% endif %}
+
+        {% if status.service.log %}
+        <a class="btn btn-sm btn-outline-secondary btn-touch" href="{% url 'logs:page' %}?service={{ status.service.id }}">
+          <i class="bi bi-file-text"></i> Log
+        </a>
+        {% endif %}
+        {% if status.service.url %}
+        <a class="btn btn-sm btn-outline-secondary btn-touch" href="{{ status.service.url }}" target="_blank" rel="noopener">
+          <i class="bi bi-box-arrow-up-right"></i> Open
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

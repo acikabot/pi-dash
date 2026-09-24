@@ -1,0 +1,4 @@
+<h2 class="h5 mb-3">The Pi</h2>
+<div hx-get="{% url 'system:tiles' %}" hx-trigger="every 15s" hx-swap="innerHTML">
+  {% include "system/_tiles.html" %}
+</div>

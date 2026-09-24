@@ -1,0 +1,14 @@
+# A manual run of News Bot, started by the dashboard: systemctl start news-bot@<mode>.service
+# The mode (%i) is the argument the bot already understands.
+[Unit]
+Description=News Bot — manual run (%i)
+
+[Service]
+Type=oneshot
+User=acika
+Group=acika
+WorkingDirectory=/home/acika/bots/news-bot
+EnvironmentFile=/home/acika/bots/news-bot/.env
+ExecStart=/home/acika/bots/news-bot/venv/bin/python news_bot.py %i
+StandardOutput=append:/home/acika/bots/news-bot/news_bot.log
+StandardError=append:/home/acika/bots/news-bot/news_bot.log

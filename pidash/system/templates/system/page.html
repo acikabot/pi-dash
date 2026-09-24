@@ -1,0 +1,80 @@
+{% extends "core/base.html" %}
+{% block content %}
+{% if reboot_required %}
+<div class="alert alert-warning"><i class="bi bi-arrow-repeat"></i> A system update wants a reboot.</div>
+{% endif %}
+
+<div class="mb-4" hx-get="{% url 'system:tiles' %}" hx-trigger="every 15s" hx-swap="innerHTML">
+  {% include "system/_tiles.html" %}
+</div>
+
+<div class="row g-3">
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h2 class="h6">Everything at once</h2>
+        <p class="text-body-secondary small">Applies to every service on the overview.</p>
+        <div class="d-flex flex-wrap gap-2">
+          {% for action, label, icon, style in bulk_buttons %}
+          <form method="post" action="{% url 'system:bulk' %}">
+            {% csrf_token %}<input type="hidden" name="action" value="{{ action }}">
+            <button class="btn btn-outline-{{ style }} btn-touch" type="submit"
+                    data-busy data-busy-label="Working">
+              <i class="bi bi-{{ icon }}"></i> {{ label }}
+            </button>
+          </form>
+          {% endfor %}
+          <form method="post" action="{% url 'system:clear_logs' %}"
+                data-confirm="Empty every log file?">
+            {% csrf_token %}
+            <button class="btn btn-outline-secondary btn-touch" type="submit"><i class="bi bi-eraser"></i> Clear all logs</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h2 class="h6">Maintenance</h2>
+        <p class="text-body-secondary small">
+          The updater runs on its own every five days; it also has a card on the overview.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <form method="post" action="{% url 'services:run' 'updater' %}">
+            {% csrf_token %}<input type="hidden" name="mode" value="">
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button class="btn btn-outline-primary btn-touch" type="submit"
+                    data-busy data-busy-label="Starting"><i class="bi bi-box-arrow-down"></i> Update now</button>
+          </form>
+          <a class="btn btn-outline-secondary btn-touch" href="{% url 'logs:page' %}?service=updater">
+            <i class="bi bi-file-text"></i> Updater log
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card border-danger-subtle">
+      <div class="card-body">
+        <h2 class="h6 text-danger-emphasis">Power</h2>
+        <p class="text-body-secondary small">The Pi runs your DNS too — everything goes with it.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <form method="post" action="{% url 'system:power' %}"
+                data-confirm="Reboot the Pi now? Everything on it goes down for a minute.">
+            {% csrf_token %}<input type="hidden" name="action" value="reboot">
+            <button class="btn btn-outline-warning btn-touch" type="submit"><i class="bi bi-arrow-clockwise"></i> Reboot</button>
+          </form>
+          <form method="post" action="{% url 'system:power' %}"
+                data-confirm="Shut the Pi down? You will need physical access to start it again.">
+            {% csrf_token %}<input type="hidden" name="action" value="shutdown">
+            <button class="btn btn-outline-danger btn-touch" type="submit"><i class="bi bi-power"></i> Shut down</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

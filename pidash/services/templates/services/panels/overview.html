@@ -1,0 +1,7 @@
+<div class="d-flex align-items-center gap-2 mb-3">
+  <h2 class="h5 mb-0 me-auto">Services</h2>
+  <a class="btn btn-sm btn-outline-secondary" href="{% url 'services:page' %}">All controls</a>
+</div>
+<div class="mb-4" hx-get="{% url 'services:cards' %}" hx-trigger="every 10s" hx-swap="innerHTML">
+  {% include "services/_cards.html" %}
+</div>

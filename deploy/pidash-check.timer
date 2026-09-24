@@ -1,0 +1,10 @@
+[Unit]
+Description=Check the Pi's services every few minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,7 @@
+{% if problems %}
+<a class="badge text-bg-danger text-decoration-none" href="{% url 'services:page' %}">
+  <i class="bi bi-exclamation-triangle"></i> {{ problems }} need{{ problems|pluralize:"s," }} attention
+</a>
+{% else %}
+<span class="badge text-bg-success"><i class="bi bi-check-circle"></i> All good</span>
+{% endif %}

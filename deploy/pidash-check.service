@@ -1,0 +1,12 @@
+# Looks at every service and pushes a message when one breaks. Fired by the timer.
+[Unit]
+Description=Pi dashboard service check
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=__USER__
+Group=__USER__
+WorkingDirectory=__APP_DIR__
+EnvironmentFile=__APP_DIR__/.env
+ExecStart=__APP_DIR__/.venv/bin/python manage.py check_services

@@ -1,0 +1,14 @@
+# A manual run of Kevin Bot, started by the dashboard: systemctl start kevin-bot@<mode>.service
+# The mode (%i) is the argument the bot already understands.
+[Unit]
+Description=Kevin Bot — manual run (%i)
+
+[Service]
+Type=oneshot
+User=acika
+Group=acika
+WorkingDirectory=/home/acika/bots/kevin-bot
+EnvironmentFile=/home/acika/bots/kevin-bot/.env
+ExecStart=/home/acika/bots/kevin-bot/venv/bin/python kevin_bot.py %i
+StandardOutput=append:/home/acika/bots/kevin-bot/kevin_bot.log
+StandardError=append:/home/acika/bots/kevin-bot/kevin_bot.log

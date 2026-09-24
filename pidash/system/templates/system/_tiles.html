@@ -1,0 +1,19 @@
+<div class="row g-3">
+  {% for tile in tiles %}
+  <div class="col-6 col-md-4 col-xl">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="stat-label text-body-secondary">{{ tile.label }}</div>
+        <div class="stat-value">{{ tile.value }}</div>
+        <div class="small text-body-secondary">{{ tile.detail }}</div>
+        {% if tile.percent is not None %}
+        <div class="progress mt-2" style="height:.35rem" role="progressbar" aria-label="{{ tile.label }}"
+             aria-valuenow="{{ tile.percent }}" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar bg-{{ tile.tone }}" style="width: {{ tile.percent }}%"></div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

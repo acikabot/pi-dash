@@ -1,0 +1,85 @@
+{% load static %}<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}{{ page_title|default:"Pi control" }}{% endblock %} · Pi control</title>
+  <link rel="icon" href="{% static 'core/icon.svg' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'core/app.css' %}">
+  <script defer src="{% static 'vendor/htmx/htmx.min.js' %}"></script>
+  <script defer src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+  <script defer src="{% static 'core/app.js' %}"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<div id="offline" class="offline-bar d-none">Lost connection to the Pi. Retrying…</div>
+
+{% if user.is_authenticated %}
+<nav class="navbar navbar-expand-lg border-bottom bg-body-tertiary sticky-top">
+  <div class="container-xxl">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'core:overview' %}">
+      <i class="bi bi-cpu"></i>
+      <span>Pi control</span>
+      <span class="badge text-bg-secondary fw-normal d-none d-sm-inline">{{ hostname }}</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"
+            aria-controls="nav" aria-expanded="false" aria-label="Menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto">
+        {% for item in menu %}
+        <li class="nav-item">
+          <a class="nav-link{% if request.resolver_match.view_name == item.url_name %} active{% endif %}"
+             href="{% url item.url_name %}"><i class="bi bi-{{ item.icon }}"></i> {{ item.label }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="d-flex align-items-center gap-2 py-2 py-lg-0">
+        {% for panel in navbar_panels %}{% include panel.template %}{% endfor %}
+        <form method="post" action="{% url 'core:logout' %}">
+          {% csrf_token %}
+          <button class="btn btn-sm btn-outline-secondary" type="submit">
+            <i class="bi bi-box-arrow-right"></i> Sign out
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endif %}
+
+<main class="container-xxl py-3 py-lg-4 flex-grow-1">
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  {% block page_header %}
+    {% if page_title %}
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+      <div class="me-auto">
+        <h1 class="h4 mb-0">{{ page_title }}</h1>
+        {% if page_subtitle %}<div class="text-body-secondary small">{{ page_subtitle }}</div>{% endif %}
+      </div>
+      {% block page_actions %}{% endblock %}
+    </div>
+    {% endif %}
+  {% endblock %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="border-top py-2">
+  <div class="container-xxl d-flex flex-wrap gap-2 small text-body-secondary">
+    <span>{{ hostname }}</span>
+    <span class="ms-auto" id="clock" data-tz-clock>—</span>
+  </div>
+</footer>
+</body>
+</html>

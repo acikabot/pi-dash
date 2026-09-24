@@ -1,0 +1,4 @@
+{% extends "core/base.html" %}
+{% block content %}
+  {% for panel in panels %}{% include panel.template %}{% endfor %}
+{% endblock %}

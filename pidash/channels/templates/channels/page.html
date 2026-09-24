@@ -1,0 +1,59 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-12 col-lg-7">
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead><tr><th>Name</th><th class="d-none d-md-table-cell">Niche</th><th>ID</th><th></th></tr></thead>
+          <tbody>
+            {% for channel in channels %}
+            <tr>
+              <td>{{ channel.name }}</td>
+              <td class="d-none d-md-table-cell text-body-secondary small">{{ channel.niche }}</td>
+              <td><code class="small">{{ channel.id }}</code></td>
+              <td class="text-end">
+                <form method="post" action="{% url 'channels:remove' service.id %}"
+                      data-confirm="Remove {{ channel.name }}?">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                  <input type="hidden" name="id" value="{{ channel.id }}">
+                  <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-body-secondary">No channels yet — add one on the right.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-5">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6">Add a channel</h2>
+        <form method="post" action="{% url 'channels:add' service.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <div class="mb-2">
+            <label class="form-label" for="id">Channel ID</label>
+            <input class="form-control" name="id" id="id" placeholder="UCUvvj5lwue7PspotMDjk5UA" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label" for="name">Name</label>
+            <input class="form-control" name="name" id="name" placeholder="Jeff Nippard" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="niche">Niche</label>
+            <input class="form-control" name="niche" id="niche" placeholder="evidence-based training, nutrition">
+          </div>
+          <button class="btn btn-primary btn-touch" type="submit"><i class="bi bi-plus-lg"></i> Add channel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

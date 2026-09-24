@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Runtime data
+var/
+*.sqlite3
+*.sqlite3-*
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store

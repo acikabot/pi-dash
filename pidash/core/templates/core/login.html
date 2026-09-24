@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-sm-8 col-md-5 col-lg-4">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="h5 mb-1"><i class="bi bi-cpu"></i> Pi control</h1>
+        <p class="text-body-secondary small">{{ hostname }}</p>
+        {% if form.errors %}
+        <div class="alert alert-danger py-2 small mb-3">That username and password don't match.</div>
+        {% endif %}
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+            <input type="text" name="username" class="form-control" id="{{ form.username.id_for_label }}"
+                   autocomplete="username" autofocus required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.password.id_for_label }}">Password</label>
+            <input type="password" name="password" class="form-control" id="{{ form.password.id_for_label }}"
+                   autocomplete="current-password" required>
+          </div>
+          <button class="btn btn-primary w-100" type="submit">Sign in</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

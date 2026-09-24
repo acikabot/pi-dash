@@ -1,0 +1,39 @@
+# systemd unit for the Pi dashboard. deploy/install.sh fills in the paths and user.
+[Unit]
+Description=Pi dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Its own unprivileged account, with one narrow sudo rule (see /etc/sudoers.d/pidash).
+User=__USER__
+Group=__USER__
+WorkingDirectory=__APP_DIR__
+EnvironmentFile=__APP_DIR__/.env
+ExecStart=__APP_DIR__/.venv/bin/gunicorn config.wsgi -c deploy/gunicorn.conf.py
+Restart=on-failure
+RestartSec=5
+UMask=0027
+
+# Hardening. NoNewPrivileges is deliberately absent: controlling services is this app's
+# job, and sudo cannot work without it. Everything else is closed down.
+ProtectSystem=strict
+ReadWritePaths=__APP_DIR__/var __SHARED_DIR__ __BOTS_DIR__
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,52 @@
+{% extends "core/base.html" %}
+{% block content %}
+<form class="mb-3" method="get" action="{% url 'prompts:page' %}">
+  <label class="form-label" for="service">Bot</label>
+  <select class="form-select w-auto" name="service" id="service" data-autosubmit>
+    {% for option in services %}
+    <option value="{{ option.id }}" {% if service and option.id == service.id %}selected{% endif %}>{{ option.name }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+{% for item in prompts %}
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+      <h2 class="h6 mb-0 me-auto">{{ item.prompt.label }}</h2>
+      {% if item.missing %}<span class="badge text-bg-secondary">using the default</span>
+      {% elif item.modified %}<span class="badge text-bg-info">edited</span>{% endif %}
+    </div>
+    <p class="text-body-secondary small">{{ item.prompt.desc }}</p>
+    {% if item.prompt.vars %}
+    <p class="small mb-2">Must keep:
+      {% for name in item.prompt.vars %}<code>{{ "{" }}{{ name }}{{ "}" }}</code>{% if not forloop.last %}, {% endif %}{% endfor %}
+    </p>
+    {% endif %}
+    <form method="post" action="{% url 'prompts:save' item.service.id item.prompt.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <textarea class="form-control prompt-editor mb-2" name="text" spellcheck="false">{{ item.text }}</textarea>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-primary btn-touch" type="submit"><i class="bi bi-save"></i> Save</button>
+        {% if item.default %}
+        <button class="btn btn-outline-secondary btn-touch" type="button"
+                data-submits="reset-{{ item.field_name }}">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset to original
+        </button>
+        {% endif %}
+      </div>
+    </form>
+    {% if item.default %}
+    <form id="reset-{{ item.field_name }}" method="post" class="d-none"
+          action="{% url 'prompts:reset' item.service.id item.prompt.id %}"
+          data-confirm="Put the original text back?">
+      {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% empty %}
+<p class="text-body-secondary">This bot has no editable prompts.</p>
+{% endfor %}
+{% endblock %}
