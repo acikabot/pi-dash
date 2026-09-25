@@ -4,3 +4,4 @@ django-environ==0.14.0      # configuration from .env / environment
 whitenoise==6.12.0          # static files
 gunicorn==26.2.0            # production server
 psutil==7.2.2               # CPU, memory, disk and uptime figures
+Markdown==3.10.3            # renders this project's own documentation inside the app

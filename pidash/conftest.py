@@ -40,7 +40,16 @@ def catalogue(settings, service_root, tmp_path):
 
 @pytest.fixture
 def user(db):
-    return User.objects.create_user("owner", "owner@example.invalid", "a-long-test-password")
+    """An owner: `make user` creates superusers, so that is what a login normally is."""
+    return User.objects.create_superuser("owner", "owner@example.invalid", "a-long-test-password")
+
+
+@pytest.fixture
+def helper_client(client, db):
+    """A plain account, for checking what an owner-only page hides."""
+    helper = User.objects.create_user("helper", "helper@example.invalid", "a-long-test-password")
+    client.force_login(helper)
+    return client
 
 
 @pytest.fixture

@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
+from pidash.core.registry import registry
 from pidash.recipients import store
 from pidash.services.catalog import get_service, services_with
 
@@ -21,9 +22,11 @@ class RecipientsView(TemplateView):
         ]
         return super().get_context_data(
             page_title="Settings",
-            page_subtitle="Where each bot sends its e-mail.",
+            page_subtitle="Where each bot sends its e-mail, and how this Pi is documented.",
             rows=rows,
             store_path=store.path(),
+            panels=registry.panels("settings"),
+            **registry.panel_context("settings", self.request),
             **kwargs,
         )
 

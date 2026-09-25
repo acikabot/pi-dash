@@ -1,0 +1,23 @@
+/* Reading layout for the documentation pages. */
+.doc { max-width: 62rem; line-height: 1.6; }
+.doc h1 { font-size: 1.7rem; }
+.doc h2 {
+  font-size: 1.3rem; margin-top: 2rem; padding-top: .75rem;
+  border-top: 1px solid var(--bs-border-color);
+}
+.doc h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+.doc table { display: block; overflow-x: auto; width: 100%; margin-bottom: 1rem; border-collapse: collapse; }
+.doc th, .doc td { border: 1px solid var(--bs-border-color); padding: .4rem .6rem; vertical-align: top; }
+.doc th { background: var(--bs-tertiary-bg); text-align: left; }
+.doc pre {
+  background: var(--bs-black); border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius); padding: .75rem 1rem; overflow-x: auto;
+}
+.doc code { font-size: .875em; }
+.doc :not(pre) > code { color: var(--bs-info-text-emphasis); }
+.doc img { max-width: 100%; height: auto; }
+.doc-toc { position: sticky; top: 5rem; font-size: .875rem; }
+.doc-toc ul { list-style: none; padding-left: .75rem; margin-bottom: 0; }
+.doc-toc > ul { padding-left: 0; }
+.doc-toc a { text-decoration: none; display: block; padding: .15rem 0; }
+@media (max-width: 991.98px) { .doc-toc { position: static; } }

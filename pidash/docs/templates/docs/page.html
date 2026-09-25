@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% block title %}{{ page.document.title }}{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+  <a class="small text-decoration-none me-auto" href="{% url 'docs:index' %}">
+    <i class="bi bi-chevron-left"></i> Documentation
+  </a>
+  {% for document in documents %}
+  <a class="btn btn-sm {% if document.slug == page.document.slug %}btn-secondary{% else %}btn-outline-secondary{% endif %}"
+     href="{{ document.url }}">{% if document.owner_only %}<i class="bi bi-lock"></i> {% endif %}{{ document.title }}</a>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-3 order-lg-2">
+    <nav class="doc-toc card card-body py-2" aria-label="On this page">
+      <div class="small text-uppercase text-body-secondary mb-1">On this page</div>
+      {{ page.toc|safe }}
+    </nav>
+  </div>
+  <div class="col-lg-9 order-lg-1">
+    <article class="card card-body doc">{{ page.html|safe }}</article>
+  </div>
+</div>
+{% endblock %}

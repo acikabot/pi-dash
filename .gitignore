@@ -20,3 +20,6 @@ var/
 .idea/
 *.swp
 .DS_Store
+
+# Private notes for whoever runs this Pi — served in the app, never pushed
+docs/_*.md

@@ -3,7 +3,8 @@
 A small dashboard for the services on this Raspberry Pi: the bots, the Avifly tracker and
 the dependency updater. Server-rendered Django, dark, and built to be used from a phone.
 
-It replaces the older FastAPI dashboard, keeping every button it had.
+It replaced the older FastAPI dashboard in September 2026, keeping every button it had
+and serving on the same port (5000).
 
 ## What it does
 
@@ -19,11 +20,13 @@ It replaces the older FastAPI dashboard, keeping every button it had.
   clear all logs; run the updater; reboot or shut down.
 - **Settings** — who receives each bot's e-mail.
 - **Alerts** — a push message when a service fails, and another when it recovers.
+- **Documentation** — this page and the operator's cheat sheet, rendered inside the app
+  under Settings, straight from the Markdown in this project so they can't go stale.
 
 ## How it's built
 
 One Django project, one module per feature (`services`, `logs`, `prompts`, `channels`,
-`recipients`, `system`, `alerts`). Each module registers its own menu entry, pages and
+`recipients`, `system`, `alerts`, `docs`). Each module registers its own menu entry, pages and
 panels, so the navigation and the overview are assembled from whatever is installed — the
 same idea as the Avifly tracker.
 

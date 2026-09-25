@@ -1,0 +1,19 @@
+<div class="card mt-3">
+  <div class="card-body">
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <h2 class="h6 mb-0 me-auto"><i class="bi bi-book"></i> Documentation</h2>
+      <a class="btn btn-sm btn-outline-secondary" href="{% url 'docs:index' %}">Open</a>
+    </div>
+    <div class="list-group list-group-flush">
+      {% for document in documents %}
+      <a class="list-group-item list-group-item-action bg-transparent px-0" href="{{ document.url }}">
+        <div class="d-flex align-items-center gap-2">
+          <span class="fw-semibold">{{ document.title }}</span>
+          {% if document.owner_only %}<span class="badge text-bg-secondary"><i class="bi bi-lock"></i> private</span>{% endif %}
+        </div>
+        <div class="small text-body-secondary">{{ document.summary|truncatewords:22 }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>

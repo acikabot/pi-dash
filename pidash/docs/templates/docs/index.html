@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="row g-3">
+  {% for document in documents %}
+  <div class="col-12 col-lg-6">
+    <a class="card h-100 text-decoration-none" href="{{ document.url }}">
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <h2 class="h6 mb-0">{{ document.title }}</h2>
+          {% if document.owner_only %}<span class="badge text-bg-secondary"><i class="bi bi-lock"></i> private</span>{% endif %}
+        </div>
+        <p class="text-body-secondary small mb-0">{{ document.summary|truncatewords:32 }}</p>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

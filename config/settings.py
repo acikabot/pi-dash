@@ -53,6 +53,7 @@ PIDASH_MODULES = [
             "pidash.recipients",
             "pidash.system",
             "pidash.alerts",
+            "pidash.docs",
         ],
     )
     if module

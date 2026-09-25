@@ -22,4 +22,6 @@
 <p class="text-body-secondary small mt-3">
   <i class="bi bi-info-circle"></i> Kept in {{ store_path }}, which the bots read at start-up.
 </p>
+
+{% for panel in panels %}{% include panel.template %}{% endfor %}
 {% endblock %}
