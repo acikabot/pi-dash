@@ -55,3 +55,26 @@ def test_the_documents_need_a_sign_in(project):
 def test_they_are_linked_from_the_settings_page(client_in, project, fake_systemd):
     body = client_in.get(reverse("recipients:page")).content.decode()
     assert "Documentation" in body and reverse("docs:page", args=["guide"]) in body
+
+
+def test_pictures_are_served_and_outside_ones_become_labels(client_in, project):
+    (project / "docs" / "images").mkdir()
+    (project / "docs" / "images" / "home.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+    (project / "README.md").write_text(
+        "# Pi control\n\n![Home page](docs/images/home.png)\n\n"
+        "![Tests](https://img.shields.io/badge/tests-passing-green)\n"
+    )
+    docs._cache.clear()
+
+    body = client_in.get(reverse("docs:page", args=["guide"])).content.decode()
+    image_url = reverse("docs:image", args=["home.png"])
+    assert f'src="{image_url}"' in body
+    assert "img.shields.io" not in body  # blocked by the page's policy: shown as a label
+    assert ">Tests</span>" in body
+
+    response = client_in.get(image_url)
+    assert response.status_code == 200 and response["Content-Type"] == "image/png"
+
+    images = reverse("docs:index") + "images/"
+    assert client_in.get(images + "missing.png").status_code == 404
+    assert client_in.get(images + "..%2F..%2FREADME.md").status_code == 404
