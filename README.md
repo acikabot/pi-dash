@@ -92,13 +92,3 @@ rather than every five minutes, and that a private document stays private.
 | **Notifications** | ntfy for push messages |
 | **Quality** | pytest (56 tests), ruff for linting and formatting |
 | **Host** | A Raspberry Pi 4, behind a private network |
-
-## Where it goes next
-
-- **Discovering services by itself.** The machine already knows which services were
-  installed by hand rather than shipped with the system — enough to offer them as cards to
-  adopt, with their name, schedule and logs filled in. The interesting part is doing that
-  without widening the permission model, which is why it is a design question and not just
-  a feature.
-- **Private-network-only access** rather than the local network, so it is reachable from
-  anywhere I am without being reachable by anyone else.
