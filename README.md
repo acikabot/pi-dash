@@ -4,7 +4,12 @@ A small dashboard for the services on this Raspberry Pi: the bots, the Avifly tr
 the dependency updater. Server-rendered Django, dark, and built to be used from a phone.
 
 It replaced the older FastAPI dashboard in September 2026, keeping every button it had
-and serving on the same port (5000).
+and serving on the same port (5000). The bots it drives live in their own repository
+(`pi-automation-stack`); this one only needs to know their unit names and folders.
+
+Like that repo, **this checkout is the live deployment** — the paths in
+`config/services.py` and `deploy/bots/` point at this Pi, so a copy elsewhere means
+editing them first.
 
 ## What it does
 
